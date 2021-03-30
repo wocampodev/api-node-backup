@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 
+const { DBConnection } = require('../database/bootstrap');
+
 
 class Server {
 
@@ -10,11 +12,18 @@ class Server {
         this.port = process.env.PORT;
         this.usuariosPath = '/api/usuarios';
         
+        // Conectar a base de datos
+        this.conectarDB();
+
         // Middlewares
         this.middlewares();
 
         // Rutas de la app
         this.routes();
+    }
+
+    async conectarDB() {
+        await DBConnection();
     }
 
     middlewares() {
@@ -32,14 +41,14 @@ class Server {
 
     routes() {
         
-        this.app.use( this.usuariosPath , require('../routes/usuario.routes') );
+        this.app.use( this.usuariosPath, require('../routes/usuario.routes') );
 
     }
 
     listen() {
 
         this.app.listen( this.port, () => {
-            console.log('Servidor corriendo en el puerto', this.port)
+            console.log('Servidor corriendo en el puerto', this.port);
         });
 
     }
