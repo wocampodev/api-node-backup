@@ -62,7 +62,7 @@ const loginWithGoogle = async ( req = request, res = response ) => {
     try {
         
         const { nombre, correo, img } = await verificarTokenGoogle( id_token );
-        let usuario = await Usuario.find({ correo });
+        let usuario = await Usuario.findOne({ correo });
 
         // Si no está creado
         if ( !correo ) {
