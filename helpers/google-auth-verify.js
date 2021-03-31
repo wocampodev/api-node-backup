@@ -25,6 +25,7 @@ const verificarTokenGoogle = async ( id_token = '' ) => {
         // const domain = payload['hd'];
 
     } catch ( error ) {
+        console.log(error);
         return error;
     }
 

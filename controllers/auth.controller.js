@@ -65,7 +65,7 @@ const loginWithGoogle = async ( req = request, res = response ) => {
         let usuario = await Usuario.findOne({ correo });
 
         // Si no está creado
-        if ( !correo ) {
+        if ( !usuario ) {
             
             const data = { nombre, correo, password: 'fake123', img, google: true };
             usuario = new Usuario( data );
@@ -80,7 +80,7 @@ const loginWithGoogle = async ( req = request, res = response ) => {
             });
         }
 
-        const token = await generarJWT( usuario.id );
+        const token = await generarJWT( usuario.uid );
 
         return res.status(200).json({
             msg: 'Login con Google exitoso',
@@ -90,7 +90,7 @@ const loginWithGoogle = async ( req = request, res = response ) => {
 
     } catch (error) {
         
-        return res.status(400).json({
+        return res.status(401).json({
             msg: 'Token de Google inválido',
         });
 
