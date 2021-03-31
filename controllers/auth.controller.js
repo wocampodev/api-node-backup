@@ -2,6 +2,8 @@ const { request, response } = require('express');
 const bcryptjs = require('bcryptjs');
 
 const { generarJWT } = require('../helpers/jwt-functions');
+const { verificarTokenGoogle } = require('../helpers/google-auth-verify');
+
 const Usuario = require('../models/usuario.model');
 
 
@@ -53,5 +55,47 @@ const login = async ( req = request, res = response ) => {
 
 };
 
+const loginWithGoogle = async ( req = request, res = response ) => {
 
-module.exports = { login };
+    const { id_token } = req.body;
+
+    try {
+        
+        const { nombre, correo, img } = await verificarTokenGoogle( id_token );
+        let usuario = await Usuario.find({ correo });
+
+        // Si no está creado
+        if ( !correo ) {
+            
+            const data = { nombre, correo, password: 'fake123', img, google: true };
+            usuario = new Usuario( data );
+            await usuario.save();        
+
+        }
+
+        // Si el usuario está deshabilidato en DB
+        if ( !usuario.estado ) {
+            return res.status(401).json({
+                msg: 'Hable con el administrador, usuario bloqueado'
+            });
+        }
+
+        const token = await generarJWT( usuario.id );
+
+        return res.status(200).json({
+            msg: 'Login con Google exitoso',
+            usuario,
+            token
+        });
+
+    } catch (error) {
+        
+        return res.status(400).json({
+            msg: 'Token de Google inválido',
+        });
+
+    }
+
+};
+
+module.exports = { login, loginWithGoogle };
