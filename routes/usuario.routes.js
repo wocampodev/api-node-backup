@@ -2,24 +2,19 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 
 const { validatJWT, 
-        validarCampos, 
-        esAdmin, 
+        validarCampos,
         tieneRol } =  require('../middlewares');
 
 const { esRolValido, 
         esEmailNuevo, 
         existeUsuarioConEseId } = require("../helpers/db-validators");
 
-const { usuariosGet,
-        usuariosPost,
-        usuariosPut,
-        usuariosPatch,
-        usuariosDelete } = require("../controllers/usuario.controller");
+const { UsuarioController } = require("../controllers");
 
 
 const router = Router();
 
-router.get('/', usuariosGet );
+router.get('/', UsuarioController.usuariosGet );
 
 router.post('/', [
 
@@ -31,7 +26,7 @@ router.post('/', [
     // check('rol', 'No es un rol válido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
     validarCampos
 
-], usuariosPost );
+], UsuarioController.usuariosPost );
 
 router.put('/:id', [
 
@@ -40,9 +35,9 @@ router.put('/:id', [
     check('rol').custom( esRolValido ),
     validarCampos
     
-], usuariosPut );
+], UsuarioController.usuariosPut );
 
-router.patch('/', usuariosPatch );
+router.patch('/', UsuarioController.usuariosPatch );
 
 router.delete('/:id', [
 
@@ -53,7 +48,7 @@ router.delete('/:id', [
     check('id').custom( existeUsuarioConEseId ),
     validarCampos
 
-], usuariosDelete );
+], UsuarioController.usuariosDelete );
 
 
 module.exports = router;
