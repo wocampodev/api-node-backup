@@ -141,11 +141,23 @@ const mostrarImagen = async ( req, res = response ) => {
             });
     }
 
+    // if ( modelo.img ) {
+    //     const pathImagen = path.join( __dirname, '../uploads', coleccion, modelo.img );
+    //     if ( fs.existsSync( pathImagen ) ) {
+    //         return res.sendFile( pathImagen );
+    //     }
+    // }
+    
     if ( modelo.img ) {
-        const pathImagen = path.join( __dirname, '../uploads', coleccion, modelo.img );
-        if ( fs.existsSync( pathImagen ) ) {
-            return res.sendFile( pathImagen );
-        }
+        const nombreArr = modelo.img.split('/');
+        const nombre = nombreArr[ nombreArr.length - 1 ];
+        const [ publicId ] = nombre.split('.');
+        let url = '';
+        await cloudinary.api.resource( publicId, ( error, result ) => {
+            url = result.secure_url;
+        });
+        return res.json( url );
+        // return res.sendFile( url );
     }
 
     const pathDefault = path.join( __dirname, '../public/assets/no-image.jpg' );
