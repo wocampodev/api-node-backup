@@ -7,7 +7,7 @@ const { validatJWT,
 
 const { esRolValido, 
         esEmailNuevo, 
-        existeUsuarioConEseId } = require("../helpers/db-validators");
+        existeUsuarioConEseId } = require("../helpers");
 
 const { UsuarioController } = require("../controllers");
 

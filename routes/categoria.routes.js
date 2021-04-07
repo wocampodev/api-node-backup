@@ -5,7 +5,7 @@ const { validarCampos, validatJWT, esAdmin } = require("../middlewares");
 
 const { CategoriaController } = require('../controllers');
 
-const { esCategoriaNueva, existeCategoria } = require("../helpers/db-validators");
+const { esCategoriaNueva, existeCategoria } = require("../helpers");
 
 
 const router = Router();

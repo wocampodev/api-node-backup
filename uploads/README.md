@@ -1,0 +1,1 @@
+# Carpeta estática para archivos
